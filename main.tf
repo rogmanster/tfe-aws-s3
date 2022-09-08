@@ -24,6 +24,19 @@ provider "aws" {
   region = var.aws_region
 }
 
+resource "aws_kms_key" "s3" {
+  deletion_window_in_days = 7
+  description             = "AWS KMS Customer-managed key"
+  enable_key_rotation     = false
+  is_enabled              = true
+  key_usage               = "ENCRYPT_DECRYPT"
+
+  tags = {
+    name             = "Roger-Test-Bucket"
+    Owner            = "rchao@hashicorp.com"
+  }
+}
+
 resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
   acl    = var.bucket_acl
@@ -31,7 +44,7 @@ resource "aws_s3_bucket" "bucket" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = var.kms_key_arn
+        kms_master_key_id = data.aws_kms_key.s3.arn
         sse_algorithm     = "aws:kms"
       }
     }
@@ -39,11 +52,10 @@ resource "aws_s3_bucket" "bucket" {
 
   tags = {
     name             = "Roger-Test-Bucket"
-    Owner            = "roger@hashicorp.com"
+    Owner            = "rchao@hashicorp.com"
   }
 }
 
 output "sse_algorithm" {
   value = aws_s3_bucket.bucket.server_side_encryption_configuration[0].rule[0].apply_server_side_encryption_by_default[0].sse_algorithm
 }
-
