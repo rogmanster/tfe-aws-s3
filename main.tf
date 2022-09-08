@@ -33,6 +33,8 @@ resource "aws_kms_key" "s3" {
   }
 }
 
+data "aws"
+
 resource "aws_s3_bucket" "bucket" {
   bucket = "${var.prefix}-s3-bucket"
   acl    = var.bucket_acl
@@ -40,7 +42,7 @@ resource "aws_s3_bucket" "bucket" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        kms_master_key_id = data.aws_kms_key.s3.arn
+        kms_master_key_id = aws_kms_key.s3.arn
         sse_algorithm     = "aws:kms"
       }
     }
