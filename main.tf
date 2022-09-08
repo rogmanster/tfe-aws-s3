@@ -34,7 +34,7 @@ resource "aws_kms_key" "s3" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = ${var.resource_prefix}-s3-bucket
+  bucket = "${var.prefix}-s3-bucket"
   acl    = var.bucket_acl
 
   server_side_encryption_configuration {
