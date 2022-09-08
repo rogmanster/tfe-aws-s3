@@ -7,17 +7,13 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "bucket_name" {
-  description = "Name of the bucket to create"
+variable "prefix" {
+  default     = "rchao"
 }
 
 variable "bucket_acl" {
   description = "ACL for S3 bucket: private, public-read, public-read-write, etc"
   default     = "private"
-}
-
-variable "kms_key_arn" {
-  description = "ARN of the KMS key that encrypts the bucket"
 }
 
 provider "aws" {
@@ -38,7 +34,7 @@ resource "aws_kms_key" "s3" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = var.bucket_name
+  bucket = ${var.resource_prefix}-s3-bucket
   acl    = var.bucket_acl
 
   server_side_encryption_configuration {
