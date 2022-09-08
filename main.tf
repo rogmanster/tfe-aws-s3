@@ -33,8 +33,6 @@ resource "aws_kms_key" "s3" {
   }
 }
 
-data "aws"
-
 resource "aws_s3_bucket" "bucket" {
   bucket = "${var.prefix}-s3-bucket"
   acl    = var.bucket_acl
